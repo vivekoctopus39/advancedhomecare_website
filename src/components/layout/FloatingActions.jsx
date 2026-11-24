@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowUp, Phone } from 'lucide-react'
 import { WhatsAppIcon } from '../common/SocialIcons'
-import { telLink, whatsAppLink } from '../../config/site'
+import { useSiteSettings } from '../../hooks/useContent'
 import { useScrolledPast } from '../../hooks/useScrollPosition'
 
 /**
@@ -11,8 +11,8 @@ import { useScrolledPast } from '../../hooks/useScrollPosition'
  */
 export default function FloatingActions() {
   const showTop = useScrolledPast(600)
-  const wa = whatsAppLink()
-  const tel = telLink()
+  const { tel, whatsApp } = useSiteSettings()
+  const wa = whatsApp()
 
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const scrollTop = () => window.scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' })

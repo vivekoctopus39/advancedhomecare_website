@@ -2,20 +2,24 @@
  * Reusable API client.
  *
  * The base URL comes from the `VITE_API_BASE_URL` environment variable
- * (see `.env.example`). While it is empty, `isApiConfigured` is false and
- * no network requests are made anywhere in the app.
+ * (see `.env.example`), e.g. http://localhost:5000/api/public.
+ * While it is empty, `isApiConfigured` is false, no network requests are
+ * made, and the site renders its built-in content.
  */
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
 
 export const isApiConfigured = Boolean(API_BASE_URL)
 
+/** Origin of the backend (where /uploads images are served). */
+export const API_ORIGIN = isApiConfigured ? new URL(API_BASE_URL).origin : ''
+
+/** Turn a backend image path (/uploads/x.jpg) into a full URL. */
+export const assetUrl = (url) => (url && url.startsWith('/uploads/') ? `${API_ORIGIN}${url}` : url || '')
+
 export const endpoints = {
+  bootstrap: '/bootstrap',
   enquiries: '/enquiries',
   bookings: '/booking-enquiries',
-  services: '/services',
-  testimonials: '/testimonials',
-  faqs: '/faqs',
-  team: '/team',
 }
 
 export class ApiError extends Error {

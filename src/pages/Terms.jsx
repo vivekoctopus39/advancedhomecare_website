@@ -1,6 +1,7 @@
 import LegalDocument from '../components/common/LegalDocument'
-import { termsAndConditions } from '../data/legal'
+import { useContent } from '../hooks/useContent'
 
 export default function Terms() {
-  return <LegalDocument document={termsAndConditions} />
+  const { legal } = useContent()
+  return <LegalDocument document={legal.terms} />
 }

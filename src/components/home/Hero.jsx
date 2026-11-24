@@ -1,76 +1,70 @@
-import { ArrowRight, HeartHandshake, ShieldCheck } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Button from '../common/Button'
-import heroImage from '../../assets/images/scenes/hero-caregiver.jpg'
-import { heroTrustPoints } from '../../data/content'
 import DynamicIcon from '../common/DynamicIcon'
+import { useSection } from '../../hooks/useContent'
 
 export default function Hero() {
+  const hero = useSection('home.hero')
+  const cards = useSection('home.hero_cards').items
+
   return (
     <section className="hero">
       <div className="hero__bg" aria-hidden="true" />
       <div className="container hero__inner">
         <div className="hero__content">
-          <span className="hero__badge">
-            <HeartHandshake size={16} aria-hidden="true" />
-            Trusted home healthcare for your family
-          </span>
+          {hero.eyebrow && (
+            <span className="hero__badge">
+              <DynamicIcon name="heartHandshake" size={16} aria-hidden="true" />
+              {hero.eyebrow}
+            </span>
+          )}
           <h1 className="hero__title">
-            Professional Healthcare, <span className="text-gradient">Right at Your Home.</span>
+            {hero.title} {hero.highlight && <span className="text-gradient">{hero.highlight}</span>}
           </h1>
-          <p className="hero__text">
-            Compassionate and reliable home care services for your loved ones. From professional nursing to everyday
-            personal assistance, we bring quality care and comfort directly to your doorstep.
-          </p>
+          {hero.body && <p className="hero__text">{hero.body}</p>}
           <div className="hero__actions">
-            <Button to="/book-care" size="lg" icon={ArrowRight}>
-              Book a Caregiver
-            </Button>
-            <Button to="/services" size="lg" variant="outline">
-              Explore Our Services
-            </Button>
+            {hero.primaryCta && (
+              <Button to={hero.primaryCta.url} size="lg" icon={ArrowRight}>
+                {hero.primaryCta.label}
+              </Button>
+            )}
+            {hero.secondaryCta && (
+              <Button to={hero.secondaryCta.url} size="lg" variant="outline">
+                {hero.secondaryCta.label}
+              </Button>
+            )}
           </div>
-          <ul className="hero__trust">
-            {heroTrustPoints.map((point) => {
-              return (
-                <li key={point.label}>
+          {hero.items.length > 0 && (
+            <ul className="hero__trust">
+              {hero.items.map((point) => (
+                <li key={point.id || point.title}>
                   <span className="hero__trust-icon">
                     <DynamicIcon name={point.icon} size={18} aria-hidden="true" />
                   </span>
-                  {point.label}
+                  {point.title}
                 </li>
-              )
-            })}
-          </ul>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="hero__visual">
           <div className="hero__image-frame">
-            <img
-              src={heroImage}
-              alt="A health professional examining an elderly man with a stethoscope"
-              width="1200"
-              height="800"
-              fetchPriority="high"
-            />
+            {hero.image && (
+              <img src={hero.image} alt={hero.imageAlt} width="1200" height="800" fetchPriority="high" />
+            )}
           </div>
-          <div className="hero__float hero__float--top">
-            <span className="hero__float-icon hero__float-icon--green">
-              <ShieldCheck size={20} aria-hidden="true" />
-            </span>
-            <span>
-              <strong>Care at home</strong>
-              <small>Comfort of familiar surroundings</small>
-            </span>
-          </div>
-          <div className="hero__float hero__float--bottom">
-            <span className="hero__float-icon">
-              <HeartHandshake size={20} aria-hidden="true" />
-            </span>
-            <span>
-              <strong>Personalised plans</strong>
-              <small>Built around each patient</small>
-            </span>
-          </div>
+          {cards.slice(0, 2).map((card, i) => (
+            <div key={card.id || card.title} className={`hero__float hero__float--${i === 0 ? 'top' : 'bottom'}`}>
+              <span className={`hero__float-icon${i === 0 ? ' hero__float-icon--green' : ''}`}>
+                <DynamicIcon name={card.icon} size={20} aria-hidden="true" />
+              </span>
+              <span>
+                <strong>{card.title}</strong>
+                {card.text && <small>{card.text}</small>}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

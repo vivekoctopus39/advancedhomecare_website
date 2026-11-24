@@ -29,6 +29,12 @@ export default function Button({
     </>
   )
 
+  // Links set from the admin panel may be external (https:, mailto:, tel:).
+  if (to && /^(https?:|mailto:|tel:)/i.test(to)) {
+    href = to
+    to = undefined
+  }
+
   if (to) {
     return (
       <Link to={to} className={classes} {...rest}>

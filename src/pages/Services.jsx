@@ -7,12 +7,14 @@ import { EmptyState } from '../components/common/StateMessage'
 import ServiceCard from '../components/services/ServiceCard'
 import CareOptions from '../components/home/CareOptions'
 import CtaBanner from '../components/home/CtaBanner'
-import { serviceCategories, services } from '../data/services'
+import { useSection, useServices } from '../hooks/useContent'
 
 export default function Services() {
   const [params, setParams] = useSearchParams()
   const category = params.get('category') || 'all'
   const query = params.get('q') || ''
+  const { services, serviceCategories } = useServices()
+  const hero = useSection('services.hero')
 
   const updateParam = (key, value) => {
     const next = new URLSearchParams(params)
@@ -29,20 +31,12 @@ export default function Services() {
         !q || [s.title, s.summary, ...s.features].some((text) => text.toLowerCase().includes(q))
       return inCategory && matches
     })
-  }, [category, query])
+  }, [services, category, query])
 
   return (
     <>
-      <Seo
-        title="Our Services"
-        description="Explore Advanced Home Care services: home nursing, elderly care, patient care, caregivers, medicine management, meals and more."
-      />
-      <PageHero
-        eyebrow="Our Services"
-        title="Home Care Services for Every Need"
-        text="Professional nursing, dedicated caregivers and everyday assistance, all delivered with compassion at home."
-        breadcrumbs={[{ label: 'Our Services' }]}
-      />
+      <Seo title={hero.eyebrow || 'Our Services'} description={hero.body} />
+      <PageHero sectionKey="services.hero" breadcrumbs={[{ label: hero.eyebrow || 'Our Services' }]} />
 
       <section className="section">
         <div className="container">

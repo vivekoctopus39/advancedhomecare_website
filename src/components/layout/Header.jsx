@@ -3,9 +3,8 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { ArrowRight, Menu, Phone, X } from 'lucide-react'
 import Logo from '../common/Logo'
 import Button from '../common/Button'
-import { mainNav, primaryCta } from '../../data/navigation'
 import { useScrolledPast } from '../../hooks/useScrollPosition'
-import { siteConfig, telLink } from '../../config/site'
+import { useMenu, useSiteSettings } from '../../hooks/useContent'
 
 /** Hash links (e.g. "/#why-choose-us") are active only when the hash matches. */
 function isLinkActive(to, location) {
@@ -40,7 +39,9 @@ export default function Header() {
     }
   }, [open])
 
-  const phone = telLink()
+  const { contact, tel: phone } = useSiteSettings()
+  const mainNav = useMenu('header').items
+  const primaryCta = useMenu('header_cta').items[0] || { label: 'Book Home Care', to: '/book-care' }
 
   return (
     <header className={`site-header${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
@@ -104,7 +105,7 @@ export default function Header() {
               iconPosition="start"
               onClick={() => setOpen(false)}
             >
-              {phone ? `Call ${siteConfig.contact.phoneDisplay}` : 'Contact Our Team'}
+              {phone ? `Call ${contact.phoneDisplay}` : 'Contact Our Team'}
             </Button>
           </div>
         </nav>

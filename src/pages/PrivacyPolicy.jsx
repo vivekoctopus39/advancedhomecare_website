@@ -1,6 +1,7 @@
 import LegalDocument from '../components/common/LegalDocument'
-import { privacyPolicy } from '../data/legal'
+import { useContent } from '../hooks/useContent'
 
 export default function PrivacyPolicy() {
-  return <LegalDocument document={privacyPolicy} />
+  const { legal } = useContent()
+  return <LegalDocument document={legal['privacy-policy']} />
 }

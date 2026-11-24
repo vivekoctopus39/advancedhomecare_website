@@ -30,7 +30,7 @@ export const services = [
     category: 'medical',
     icon: 'stethoscope',
     image: homeNursing,
-    imageAlt: 'Doctor checking a patient’s blood pressure',
+    imageAlt: 'Nurse checking an elderly woman’s blood pressure at home',
     summary:
       'Professional nursing assistance at home, from wound dressing and injections to post-operative support and routine health monitoring.',
     description:
@@ -54,7 +54,7 @@ export const services = [
     category: 'caregivers',
     icon: 'heartHandshake',
     image: elderlyCare,
-    imageAlt: 'Elderly woman in a sari sharing a tender moment with her granddaughter',
+    imageAlt: 'Caregiver smiling with an elderly man in a wheelchair',
     summary:
       'Respectful, patient assistance for senior citizens with daily routines, mobility, hygiene and warm companionship.',
     description:
@@ -78,7 +78,7 @@ export const services = [
     category: 'medical',
     icon: 'bed',
     image: patientCare,
-    imageAlt: 'Elderly woman in a sari resting on her bed at home',
+    imageAlt: 'Nurse checking on a patient resting in bed at home',
     summary:
       'Hands-on help for bedridden and recovering patients, including feeding, bathing, mobility and day-to-day care coordination.',
     description:
@@ -102,7 +102,7 @@ export const services = [
     category: 'caregivers',
     icon: 'userCheck',
     image: fullTime,
-    imageAlt: 'Smiling elderly woman sitting with a young family member',
+    imageAlt: 'Caregiver feeding an elderly woman at home',
     summary:
       'A dedicated caregiver at home for day and night assistance, with care shaped around the patient’s routine.',
     description:
@@ -125,7 +125,7 @@ export const services = [
     category: 'caregivers',
     icon: 'clock',
     image: partTime,
-    imageAlt: 'Joyful elderly woman holding a smiling young child',
+    imageAlt: 'Caregiver helping an elderly man with a stretching exercise',
     summary:
       'Flexible home assistance through scheduled visits, covering personal care and daily activities when you need it most.',
     description:
@@ -148,7 +148,7 @@ export const services = [
     category: 'medical',
     icon: 'pill',
     image: medicine,
-    imageAlt: 'Weekly pill organiser with medication',
+    imageAlt: 'Caregiver giving an elderly man his medicine',
     summary:
       'Organised medicine schedules and timely reminders, following the prescriptions and instructions of the treating doctor.',
     description:
@@ -172,7 +172,7 @@ export const services = [
     category: 'daily',
     icon: 'utensils',
     image: meals,
-    imageAlt: 'Woman cooking fresh parathas in a home kitchen',
+    imageAlt: 'Caregiver serving a home-cooked meal to an elderly woman',
     summary:
       'Fresh daily meals prepared to the patient’s dietary instructions, with feeding assistance wherever it is needed.',
     description:
@@ -196,7 +196,7 @@ export const services = [
     category: 'medical',
     icon: 'activity',
     image: postSurgery,
-    imageAlt: 'Elderly man in a turban resting his hands on a walking stick',
+    imageAlt: 'Nurse dressing an elderly man’s wound after surgery',
     summary:
       'Recovery support after surgery, including mobility help, hygiene and coordination with the treating medical team.',
     description:
@@ -220,7 +220,7 @@ export const services = [
     category: 'daily',
     icon: 'heartPulse',
     image: bedside,
-    imageAlt: 'Doctor listening to a patient’s heartbeat with a stethoscope',
+    imageAlt: 'Caregiver giving water to an elderly woman in bed',
     summary:
       'Attentive day-to-day bedside assistance focused on patient comfort, hygiene, feeding and movement.',
     description:
@@ -244,7 +244,7 @@ export const services = [
     category: 'daily',
     icon: 'bath',
     image: personalCare,
-    imageAlt: 'Elderly man sitting comfortably in a chair',
+    imageAlt: 'Caregiver helping an elderly man with grooming',
     summary:
       'Discreet help with bathing, grooming, dressing and other activities of daily living, always with dignity.',
     description:
@@ -263,7 +263,7 @@ export const services = [
     category: 'medical',
     icon: 'monitorDot',
     image: icuAtHome,
-    imageAlt: 'Patient monitor and medical equipment beside a patient',
+    imageAlt: 'Nurse attending a patient on oxygen beside a monitor at home',
     summary:
       'Critical care set up at home, with medical equipment, trained nursing staff and continuous monitoring, as advised by the treating doctor.',
     description:
@@ -281,11 +281,3 @@ export const services = [
     ],
   },
 ]
-
-export const getServiceBySlug = (slug) => services.find((s) => s.slug === slug)
-
-export const getRelatedServices = (service, limit = 3) =>
-  services
-    .filter((s) => s.slug !== service.slug)
-    .sort((a, b) => Number(b.category === service.category) - Number(a.category === service.category))
-    .slice(0, limit)

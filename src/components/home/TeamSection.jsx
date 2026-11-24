@@ -1,50 +1,49 @@
 import { Info } from 'lucide-react'
 import Reveal from '../common/Reveal'
 import SectionHeading from '../common/SectionHeading'
-import { EmptyState, ErrorState, LoadingState } from '../common/StateMessage'
-import { useAsyncData } from '../../hooks/useAsyncData'
-import { getTeam } from '../../services/contentService'
+import { EmptyState } from '../common/StateMessage'
+import { useContent, useSection } from '../../hooks/useContent'
+import { assetUrl } from '../../services/api'
 
 export default function TeamSection() {
-  const { data, loading, error, isEmpty, retry } = useAsyncData(getTeam)
+  const heading = useSection('home.team')
+  const { team = [] } = useContent()
 
   return (
     <section className="section section--tint team" id="our-team">
       <div className="container">
-        <SectionHeading
-          eyebrow="Our Care Professionals"
-          title="The People Behind the Care"
-          text="Our team brings together different care roles, so each patient gets the right kind of support."
-        />
+        <SectionHeading eyebrow={heading.eyebrow} title={heading.title} text={heading.body} />
 
-        {loading && <LoadingState label="Loading care team…" />}
-        {error && <ErrorState text="We couldn’t load our care team right now." onRetry={retry} />}
-        {isEmpty && <EmptyState title="Team profiles coming soon" text="Our care team profiles will be added here." />}
-
-        {data?.length > 0 && (
+        {team.length === 0 ? (
+          <EmptyState title="Team profiles coming soon" text="Our care team profiles will be added here." />
+        ) : (
           <>
             <div className="team__grid">
-              {data.map((member, i) => (
+              {team.map((member, i) => (
                 <Reveal as="article" key={member.id} className="team-card" delay={i * 80}>
                   <div className="team-card__media">
-                    <img src={member.image} alt={member.imageAlt} loading="lazy" width="600" height="700" />
+                    {member.image && (
+                      <img src={assetUrl(member.image)} alt={member.imageAlt} loading="lazy" width="600" height="700" />
+                    )}
                   </div>
                   <div className="team-card__body">
                     <h3>{member.role}</h3>
                     <p>{member.text}</p>
-                    <ul className="tag-list">
-                      {member.skills.map((skill) => (
-                        <li key={skill}>{skill}</li>
-                      ))}
-                    </ul>
+                    {member.skills?.length > 0 && (
+                      <ul className="tag-list">
+                        {member.skills.map((skill) => (
+                          <li key={skill}>{skill}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </Reveal>
               ))}
             </div>
-            {data.some((m) => m.isSample) && (
+            {heading.highlight && team.some((m) => m.isSample) && (
               <p className="sample-note">
                 <Info size={15} aria-hidden="true" />
-                Images are representative stock photos of care roles, not profiles of individual staff members.
+                {heading.highlight}
               </p>
             )}
           </>

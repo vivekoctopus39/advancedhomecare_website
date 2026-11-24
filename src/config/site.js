@@ -1,4 +1,8 @@
 /**
+ * Built-in business configuration, used only when the backend API is not
+ * configured. With the API connected, these values come from the admin
+ * panel (Settings).
+ *
  * Central business configuration.
  *
  * Every value marked `null` / empty is an intentional placeholder: real
@@ -45,14 +49,3 @@ export const placeholderText = {
   address: 'Business address to be updated',
   workingHours: 'Working hours to be updated',
 }
-
-export const hasPhone = () => Boolean(siteConfig.contact.phoneDial)
-export const hasWhatsApp = () => Boolean(siteConfig.contact.whatsappNumber)
-
-export const telLink = () =>
-  hasPhone() ? `tel:${siteConfig.contact.phoneDial}` : null
-
-export const whatsAppLink = (message = 'Hello, I would like to enquire about home care services.') =>
-  hasWhatsApp()
-    ? `https://wa.me/${siteConfig.contact.whatsappNumber}?text=${encodeURIComponent(message)}`
-    : null

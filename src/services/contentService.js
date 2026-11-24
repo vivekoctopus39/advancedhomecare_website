@@ -1,19 +1,13 @@
 import { api, endpoints, isApiConfigured } from './api'
-import { services } from '../data/services'
-import { testimonials } from '../data/testimonials'
-import { faqs } from '../data/faqs'
-import { teamRoles } from '../data/content'
+import { fallbackContent } from '../data/fallbackContent'
 
 /**
- * Content getters. Today they resolve local data files; once the backend is
- * configured they read from the API instead, with no component changes.
+ * Loads all website content. With the backend configured it reads
+ * GET /bootstrap (managed from the admin panel); otherwise it uses the
+ * built-in content.
  */
-const fromApiOr = (endpoint, fallback) => async () => {
-  if (!isApiConfigured) return fallback
-  return api.get(endpoint)
+export async function getSiteContent() {
+  if (!isApiConfigured) return { content: fallbackContent, source: 'local' }
+  const { data } = await api.get(endpoints.bootstrap)
+  return { content: data, source: 'api' }
 }
-
-export const getServices = fromApiOr(endpoints.services, services)
-export const getTestimonials = fromApiOr(endpoints.testimonials, testimonials)
-export const getFaqs = fromApiOr(endpoints.faqs, faqs)
-export const getTeam = fromApiOr(endpoints.team, teamRoles)

@@ -1,19 +1,14 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
-import { placeholderText, siteConfig, telLink } from '../../config/site'
+import { placeholderText } from '../../config/site'
+import { useSiteSettings } from '../../hooks/useContent'
 
-/** Contact details from site config, with honest placeholders when unset. */
+/** Contact details from site settings, with honest placeholders when unset. */
 export default function ContactInfoList({ variant = 'default' }) {
-  const { contact } = siteConfig
+  const { contact, tel } = useSiteSettings()
   const address = [contact.address, contact.city].filter(Boolean).join(', ')
 
   const items = [
-    {
-      icon: Phone,
-      label: 'Call Us',
-      value: contact.phoneDisplay,
-      href: telLink(),
-      placeholder: placeholderText.phone,
-    },
+    { icon: Phone, label: 'Call Us', value: contact.phoneDisplay, href: tel, placeholder: placeholderText.phone },
     {
       icon: Mail,
       label: 'Email Us',

@@ -1,4 +1,4 @@
-import { siteConfig } from '../../config/site'
+import { useSiteSettings } from '../../hooks/useContent'
 
 /* Brand marks drawn inline (lucide-react v1 no longer ships brand icons). */
 const paths = {
@@ -37,10 +37,11 @@ export function WhatsAppIcon({ size = 22 }) {
 }
 
 export default function SocialIcons() {
+  const { social } = useSiteSettings()
   return (
     <ul className="social-icons">
       {Object.keys(paths).map((key) => {
-        const url = siteConfig.social[key]
+        const url = social[key]
         const icon = (
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
             {paths[key]}

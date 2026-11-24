@@ -6,14 +6,16 @@ import Button from '../components/common/Button'
 import { EmptyState } from '../components/common/StateMessage'
 import ServiceCard from '../components/services/ServiceCard'
 import CtaBanner from '../components/home/CtaBanner'
-import { getRelatedServices, getServiceBySlug, services } from '../data/services'
-import { careDurations, processSteps } from '../data/content'
-import { siteConfig, telLink } from '../config/site'
+import { useContent, useSection, useServices, useSiteSettings } from '../hooks/useContent'
 import DynamicIcon from '../components/common/DynamicIcon'
 
 export default function ServiceDetails() {
   const { slug } = useParams()
-  const service = getServiceBySlug(slug)
+  const { services, getBySlug, getRelated } = useServices()
+  const { careDurations = [] } = useContent()
+  const processSteps = useSection('home.process').items
+  const { tel, contact } = useSiteSettings()
+  const service = getBySlug(slug)
 
   if (!service) {
     return (
@@ -37,8 +39,7 @@ export default function ServiceDetails() {
     )
   }
 
-  const tel = telLink()
-  const related = getRelatedServices(service)
+  const related = getRelated(service)
 
   return (
     <>
@@ -99,9 +100,9 @@ export default function ServiceDetails() {
 
             <h2 className="service-detail__heading">How to Get Started</h2>
             <ol className="mini-steps">
-              {processSteps.map((s) => (
-                <li key={s.step}>
-                  <span>{s.step}</span>
+              {processSteps.map((s, i) => (
+                <li key={s.id || s.title}>
+                  <span>{i + 1}</span>
                   <div>
                     <strong>{s.title}</strong>
                     <p>{s.text}</p>
@@ -125,7 +126,7 @@ export default function ServiceDetails() {
                 icon={Phone}
                 iconPosition="start"
               >
-                {tel ? `Call ${siteConfig.contact.phoneDisplay}` : 'Contact Our Team'}
+                {tel ? `Call ${contact.phoneDisplay}` : 'Contact Our Team'}
               </Button>
             </div>
 

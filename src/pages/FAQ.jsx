@@ -6,18 +6,13 @@ import Accordion from '../components/common/Accordion'
 import Button from '../components/common/Button'
 import { EmptyState } from '../components/common/StateMessage'
 import CtaBanner from '../components/home/CtaBanner'
-import { faqs } from '../data/faqs'
-
-const categories = [
-  { id: 'all', label: 'All' },
-  { id: 'services', label: 'Services' },
-  { id: 'booking', label: 'Booking & Duration' },
-  { id: 'support', label: 'Support' },
-]
+import { useContent, useSection } from '../hooks/useContent'
 
 export default function FAQ() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all')
+  const { faqs = [], faqCategories: categories = [] } = useContent()
+  const hero = useSection('faq.hero')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -26,17 +21,12 @@ export default function FAQ() {
         (category === 'all' || f.category === category) &&
         (!q || f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)),
     )
-  }, [query, category])
+  }, [faqs, query, category])
 
   return (
     <>
-      <Seo title="FAQs" description="Answers to frequently asked questions about Advanced Home Care services and booking." />
-      <PageHero
-        eyebrow="FAQs"
-        title="Frequently Asked Questions"
-        text="Find quick answers about our services, booking process and support."
-        breadcrumbs={[{ label: 'FAQs' }]}
-      />
+      <Seo title={hero.eyebrow || 'FAQs'} description={hero.body} />
+      <PageHero sectionKey="faq.hero" breadcrumbs={[{ label: hero.eyebrow || 'FAQs' }]} />
 
       <section className="section">
         <div className="container container--narrow">
@@ -87,7 +77,7 @@ export default function FAQ() {
         </div>
       </section>
 
-      <CtaBanner title="Still Have Questions?" text="Our team is happy to talk through your loved one’s care needs." />
+      <CtaBanner sectionKey="faq.cta" />
     </>
   )
 }

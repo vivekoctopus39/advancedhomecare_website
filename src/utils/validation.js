@@ -25,7 +25,9 @@ export function validateField(field, rawValue) {
   if (rules.email && !EMAIL_RE.test(value)) return 'Please enter a valid email address.'
 
   if (rules.phone) {
-    const digits = value.replace(/[\s()-]/g, '').replace(/^\+?91/, '')
+    // Strip a +91 / 91 / 0 prefix only when it is in addition to 10 digits,
+    // so numbers that themselves start with 91 (e.g. 9123456780) stay valid.
+    const digits = value.replace(/[\s()-]/g, '').replace(/^(\+91|91|0)(?=\d{10}$)/, '')
     if (!/^[6-9]\d{9}$/.test(digits)) return 'Please enter a valid 10-digit mobile number.'
   }
 

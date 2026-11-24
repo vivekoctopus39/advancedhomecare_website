@@ -3,19 +3,17 @@ import Button from '../common/Button'
 import Reveal from '../common/Reveal'
 import SectionHeading from '../common/SectionHeading'
 import ServiceCard from '../services/ServiceCard'
-import { services } from '../../data/services'
+import { useSection, useServices } from '../../hooks/useContent'
 
 export default function ServicesSection({ limit }) {
+  const heading = useSection('home.services')
+  const { services } = useServices()
   const list = limit ? services.slice(0, limit) : services
 
   return (
     <section className="section section--tint" id="services">
       <div className="container">
-        <SectionHeading
-          eyebrow="Our Home Care Services"
-          title="Complete Care, Delivered With Compassion"
-          text="From skilled nursing to everyday personal assistance, choose the support your loved one needs, in the comfort of home."
-        />
+        <SectionHeading eyebrow={heading.eyebrow} title={heading.title} text={heading.body} />
         <div className="services-grid">
           {list.map((service, i) => (
             <Reveal key={service.id} delay={(i % 3) * 80}>

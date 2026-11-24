@@ -8,9 +8,12 @@ import './styles/sections.css'
 import './styles/forms.css'
 import './styles/pages.css'
 import App from './App.jsx'
+import ContentProvider from './context/ContentProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <ContentProvider>
+      <App />
+    </ContentProvider>
   </StrictMode>,
 )

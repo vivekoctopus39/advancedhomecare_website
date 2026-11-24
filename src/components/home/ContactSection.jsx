@@ -2,16 +2,19 @@ import { MapPin } from 'lucide-react'
 import ContactInfoList from '../common/ContactInfoList'
 import SectionHeading from '../common/SectionHeading'
 import EnquiryForm from '../forms/EnquiryForm'
-import { siteConfig } from '../../config/site'
+import { useSection, useSiteSettings } from '../../hooks/useContent'
+
+// Only Google Maps embed URLs are rendered in the iframe.
+const MAP_EMBED_RE = /^https:\/\/(www\.)?google\.[a-z.]+\/maps\/embed/
 
 export function MapEmbed() {
-  const { mapEmbedUrl } = siteConfig.contact
-  if (mapEmbedUrl) {
+  const { contact, settings } = useSiteSettings()
+  if (contact.mapEmbedUrl && MAP_EMBED_RE.test(contact.mapEmbedUrl)) {
     return (
       <div className="map-embed">
         <iframe
-          src={mapEmbedUrl}
-          title="Advanced Home Care location map"
+          src={contact.mapEmbedUrl}
+          title={`${settings.name} location map`}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
@@ -28,17 +31,14 @@ export function MapEmbed() {
 }
 
 export default function ContactSection({ headingAs = 'h2', showDetails = true }) {
+  const contact = useSection('home.contact')
+  const form = useSection('contact.form')
+
   return (
     <section className="section contact" id="enquiry">
       <div className="container contact__grid">
         <div className="contact__info">
-          <SectionHeading
-            align="left"
-            eyebrow="Contact & Enquiry"
-            title="Let’s Talk About the Care You Need"
-            text="Share a few details and our team will get in touch to understand your requirements and suggest suitable care options."
-            as={headingAs}
-          />
+          <SectionHeading align="left" eyebrow={contact.eyebrow} title={contact.title} text={contact.body} as={headingAs} />
           {showDetails && (
             <div className="contact__card">
               <ContactInfoList />
@@ -46,10 +46,7 @@ export default function ContactSection({ headingAs = 'h2', showDetails = true })
           )}
           <MapEmbed />
         </div>
-        <EnquiryForm
-          title="Home Care Enquiry"
-          intro="Tell us about the patient and the care required. This is an enquiry, not a confirmed booking."
-        />
+        <EnquiryForm title={form.title} intro={form.body} />
       </div>
     </section>
   )

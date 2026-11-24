@@ -2,9 +2,8 @@ import { useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, CircleAlert, LoaderCircle, Send } from 'lucide-react'
 import FormField from './FormField'
 import SubmissionResult from './SubmissionResult'
-import { bookingSteps, enquiryFields } from '../../data/enquiryFields'
-import { services } from '../../data/services'
-import { careDurations } from '../../data/content'
+import { bookingSteps } from '../../data/enquiryFields'
+import { useContent, useEnquiryFields, useSection } from '../../hooks/useContent'
 import { useEnquiryForm } from '../../hooks/useEnquiryForm'
 import { submitBookingEnquiry } from '../../services/enquiryService'
 import DynamicIcon from '../common/DynamicIcon'
@@ -57,11 +56,9 @@ function ChoiceGrid({ name, label, options, value, error, onSelect, columns = 'a
   )
 }
 
-const serviceChoices = services.map((s) => ({ value: s.slug, label: s.title, icon: s.icon }))
-const durationChoices = careDurations.map((d) => ({ value: d.value, label: d.label, hint: d.text, icon: d.icon }))
 const WIDE_FIELDS = new Set(['address', 'requirements', 'patientCondition'])
 
-const labelFor = (name, value) => {
+const labelFor = (name, value, services, careDurations) => {
   if (!value) return '—'
   if (name === 'service') return services.find((s) => s.slug === value)?.title || value
   if (name === 'careDuration') return careDurations.find((d) => d.value === value)?.label || value
@@ -74,6 +71,11 @@ const labelFor = (name, value) => {
 export default function BookingWizard({ initialService = '' }) {
   const [step, setStep] = useState(0)
   const topRef = useRef(null)
+  const { services = [], careDurations = [] } = useContent()
+  const enquiryFields = useEnquiryFields()
+  const summary = useSection('book.summary')
+  const serviceChoices = services.map((s) => ({ value: s.slug, label: s.title, icon: s.icon }))
+  const durationChoices = careDurations.map((d) => ({ value: d.value, label: d.label, hint: d.text, icon: d.icon }))
   const form = useEnquiryForm({
     initialValues: { service: initialService },
     onSubmit: submitBookingEnquiry,
@@ -227,7 +229,7 @@ export default function BookingWizard({ initialService = '' }) {
       </form>
 
       <aside className="booking-summary" aria-label="Enquiry summary">
-        <h3>Your Enquiry</h3>
+        <h3>{summary.title || 'Your Enquiry'}</h3>
         <dl>
           {[
             ['service', 'Service'],
@@ -239,14 +241,11 @@ export default function BookingWizard({ initialService = '' }) {
           ].map(([name, label]) => (
             <div key={name}>
               <dt>{label}</dt>
-              <dd className={values[name] ? '' : 'is-empty'}>{labelFor(name, values[name])}</dd>
+              <dd className={values[name] ? '' : 'is-empty'}>{labelFor(name, values[name], services, careDurations)}</dd>
             </div>
           ))}
         </dl>
-        <p className="booking-summary__note">
-          Submitting this form sends an enquiry. Our team will contact you to discuss requirements and availability
-          before any service is confirmed.
-        </p>
+        {summary.body && <p className="booking-summary__note">{summary.body}</p>}
       </aside>
     </div>
   )

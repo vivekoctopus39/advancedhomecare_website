@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import SectionHeading from '../common/SectionHeading'
-import { EmptyState, ErrorState, LoadingState } from '../common/StateMessage'
-import { useAsyncData } from '../../hooks/useAsyncData'
-import { getTestimonials } from '../../services/contentService'
+import { EmptyState } from '../common/StateMessage'
+import { useContent, useSection } from '../../hooks/useContent'
 
 const AUTOPLAY_MS = 6500
 
@@ -123,31 +122,23 @@ function Slider({ items }) {
 }
 
 export default function Testimonials() {
-  const { data, loading, error, isEmpty, retry } = useAsyncData(getTestimonials)
-  const hasSamples = data?.some((t) => t.isSample)
+  const heading = useSection('home.testimonials')
+  const { testimonials = [] } = useContent()
+  const hasSamples = testimonials.some((t) => t.isSample)
 
   return (
     <section className="section testimonials" id="testimonials">
       <div className="container testimonials__grid">
         <div className="testimonials__intro">
-          <SectionHeading
-            align="left"
-            eyebrow="Testimonials"
-            title="What Families Say About Our Care"
-            text="Feedback from the families we support will be shared here."
-          />
-          {hasSamples && (
-            <p className="notice notice--info">
-              The reviews shown are sample placeholders for design preview only. They are not real customer
-              testimonials.
-            </p>
-          )}
+          <SectionHeading align="left" eyebrow={heading.eyebrow} title={heading.title} text={heading.body} />
+          {hasSamples && heading.highlight && <p className="notice notice--info">{heading.highlight}</p>}
         </div>
         <div>
-          {loading && <LoadingState label="Loading testimonials…" />}
-          {error && <ErrorState text="We couldn’t load testimonials right now." onRetry={retry} />}
-          {isEmpty && <EmptyState title="Reviews coming soon" text="Customer feedback will appear here." />}
-          {data?.length > 0 && <Slider items={data} />}
+          {testimonials.length === 0 ? (
+            <EmptyState title="Reviews coming soon" text="Customer feedback will appear here." />
+          ) : (
+            <Slider items={testimonials} />
+          )}
         </div>
       </div>
     </section>

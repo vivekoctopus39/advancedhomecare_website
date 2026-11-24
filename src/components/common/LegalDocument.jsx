@@ -6,6 +6,9 @@ const slugify = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace
 
 /** Shared layout for Privacy Policy / Terms pages. */
 export default function LegalDocument({ document: doc }) {
+  if (!doc) {
+    return <PageHero title="Page not available" text="This page has not been published yet." />
+  }
   return (
     <>
       <Seo title={doc.title} description={doc.intro} />

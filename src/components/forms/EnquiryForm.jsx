@@ -1,7 +1,8 @@
 import { CircleAlert, LoaderCircle, Send } from 'lucide-react'
 import FormField from './FormField'
 import SubmissionResult from './SubmissionResult'
-import { contactFormFields, enquiryFields } from '../../data/enquiryFields'
+import { contactFormFields } from '../../data/enquiryFields'
+import { useEnquiryFields } from '../../hooks/useContent'
 import { useEnquiryForm } from '../../hooks/useEnquiryForm'
 import { submitEnquiry } from '../../services/enquiryService'
 
@@ -9,6 +10,7 @@ const WIDE_FIELDS = new Set(['address', 'requirements'])
 
 /** Single-page enquiry form used on the homepage and Contact page. */
 export default function EnquiryForm({ title = 'Send an Enquiry', intro }) {
+  const enquiryFields = useEnquiryFields()
   const form = useEnquiryForm({ onSubmit: submitEnquiry })
   const { values, errors, status, result, submitError, handleChange, handleBlur, submit, reset } = form
 

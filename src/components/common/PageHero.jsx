@@ -1,8 +1,20 @@
 import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
+import { useSection } from '../../hooks/useContent'
 
-/** Banner used at the top of inner pages, with breadcrumbs. */
-export default function PageHero({ eyebrow, title, text, breadcrumbs = [], children }) {
+/**
+ * Banner used at the top of inner pages, with breadcrumbs.
+ * Pass `sectionKey` to load eyebrow/title/text from the editable sections;
+ * explicit props override them.
+ */
+export default function PageHero({ sectionKey, eyebrow, title, text, breadcrumbs = [], children }) {
+  const section = useSection(sectionKey || '')
+  const heading = {
+    eyebrow: eyebrow ?? (sectionKey ? section.eyebrow : ''),
+    title: title ?? section.title,
+    text: text ?? (sectionKey ? section.body : ''),
+  }
+
   return (
     <section className="page-hero">
       <div className="container page-hero__inner">
@@ -19,9 +31,9 @@ export default function PageHero({ eyebrow, title, text, breadcrumbs = [], child
             ))}
           </ol>
         </nav>
-        {eyebrow && <span className="eyebrow eyebrow--light">{eyebrow}</span>}
-        <h1 className="page-hero__title">{title}</h1>
-        {text && <p className="page-hero__text">{text}</p>}
+        {heading.eyebrow && <span className="eyebrow eyebrow--light">{heading.eyebrow}</span>}
+        <h1 className="page-hero__title">{heading.title}</h1>
+        {heading.text && <p className="page-hero__text">{heading.text}</p>}
         {children}
       </div>
     </section>

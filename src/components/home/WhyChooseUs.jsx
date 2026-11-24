@@ -2,12 +2,11 @@ import { Phone } from 'lucide-react'
 import Button from '../common/Button'
 import Reveal from '../common/Reveal'
 import SectionHeading from '../common/SectionHeading'
-import { whyChooseUs } from '../../data/content'
-import { siteConfig, telLink } from '../../config/site'
 import DynamicIcon from '../common/DynamicIcon'
+import { useSection, useSiteSettings } from '../../hooks/useContent'
 
 function FeaturedCard({ item }) {
-  const tel = telLink()
+  const { tel, contact } = useSiteSettings()
   return (
     <Reveal className="feature-card feature-card--featured">
       <span className="feature-card__icon">
@@ -25,38 +24,38 @@ function FeaturedCard({ item }) {
         iconPosition="start"
         className="feature-card__cta"
       >
-        {tel ? `Call ${siteConfig.contact.phoneDisplay}` : 'Contact Our Team'}
+        {tel ? `Call ${contact.phoneDisplay}` : 'Contact Our Team'}
       </Button>
     </Reveal>
   )
 }
 
 export default function WhyChooseUs() {
+  const why = useSection('home.why')
+  // Number only the regular cards (featured cards are full-width banners).
+  const numbered = why.items.filter((item) => !item.featured)
+
   return (
     <section className="section why" id="why-choose-us">
       <div className="container">
-        <SectionHeading
-          eyebrow="Why Choose Advanced Home Care?"
-          title="Your Family Deserves the Best Care."
-          text="We combine professional skill with genuine warmth, so your loved one is supported and your family has peace of mind."
-        />
+        <SectionHeading eyebrow={why.eyebrow} title={why.title} text={why.body} />
         <div className="why__grid">
-          {whyChooseUs.map((item, i) =>
-            item.featured ? (
-              <FeaturedCard key={item.title} item={item} />
-            ) : (
-              <Reveal key={item.title} className="feature-card" delay={(i % 3) * 80}>
+          {why.items.map((item) => {
+            if (item.featured) return <FeaturedCard key={item.id || item.title} item={item} />
+            const index = numbered.indexOf(item) + 1
+            return (
+              <Reveal key={item.id || item.title} className="feature-card" delay={((index - 1) % 3) * 80}>
                 <span className="feature-card__icon">
                   <DynamicIcon name={item.icon} size={26} aria-hidden="true" />
                 </span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
                 <span className="feature-card__index" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
+                  {String(index).padStart(2, '0')}
                 </span>
               </Reveal>
-            ),
-          )}
+            )
+          })}
         </div>
       </div>
     </section>

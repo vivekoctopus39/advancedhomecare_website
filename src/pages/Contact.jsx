@@ -3,12 +3,13 @@ import Seo from '../components/common/Seo'
 import PageHero from '../components/common/PageHero'
 import { WhatsAppIcon } from '../components/common/SocialIcons'
 import ContactSection from '../components/home/ContactSection'
-import { placeholderText, siteConfig, telLink, whatsAppLink } from '../config/site'
+import { placeholderText } from '../config/site'
+import { useSection, useSiteSettings } from '../hooks/useContent'
 
 export default function Contact() {
-  const { contact } = siteConfig
-  const tel = telLink()
-  const wa = whatsAppLink()
+  const { contact, tel, whatsApp } = useSiteSettings()
+  const hero = useSection('contact.hero')
+  const wa = whatsApp()
 
   const cards = [
     {
@@ -47,16 +48,8 @@ export default function Contact() {
 
   return (
     <>
-      <Seo
-        title="Contact Us"
-        description="Contact Advanced Home Care to discuss home nursing, elderly care or caregiver requirements for your loved one."
-      />
-      <PageHero
-        eyebrow="Contact Us"
-        title="We’re Here to Help"
-        text="Reach out with any questions about our services, or send an enquiry and our team will contact you."
-        breadcrumbs={[{ label: 'Contact Us' }]}
-      />
+      <Seo title={hero.eyebrow || 'Contact Us'} description={hero.body} />
+      <PageHero sectionKey="contact.hero" breadcrumbs={[{ label: hero.eyebrow || 'Contact Us' }]} />
 
       <section className="section section--compact">
         <div className="container contact-cards">
