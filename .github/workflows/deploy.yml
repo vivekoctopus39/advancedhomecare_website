@@ -1,0 +1,31 @@
+name: Deploy Next.js to Hostinger
+
+on:
+  push:
+    branches:
+      - master # branch ka naam 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # Project folder mein jayein
+            cd /var/www/advancedhomecare.in
+            
+            # Naya code GitHub se pull karein
+            git pull origin master
+            
+            # Dependencies install karein
+            npm install
+            
+            # Next.js ke liye build banayein (agar sirf Node.js hai toh ye line hata dein)
+            npm run build
+            
+      
